@@ -1,0 +1,136 @@
+/* Styling for Doctor Components */
+
+/* Doctor List */
+.doctor-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.doctor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.doctor-card .card-header {
+  background: linear-gradient(135deg, #0dcaf0 0%, #0d6efd 100%);
+  color: white;
+  font-weight: 500;
+}
+
+.doctor-specialty {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: #e9f0ff;
+  color: var(--primary-color);
+  border-radius: 20px;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.doctor-card .fee {
+  font-weight: bold;
+  color: var(--success-color);
+}
+
+.doctor-filter-bar {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+/* Doctor Details */
+.doctor-header {
+  background: linear-gradient(135deg, #0dcaf0 0%, #0d6efd 100%);
+  color: white;
+  padding: 2rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.doctor-header h2 {
+  margin-bottom: 0.5rem;
+}
+
+.doctor-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid white;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--primary-color);
+  position: absolute;
+  top: -60px;
+  right: 40px;
+}
+
+.doctor-specialty-badge {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+}
+
+.doctor-info-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.doctor-info-card h5 {
+  color: var(--primary-color);
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.availability-box {
+  background-color: #f0f9ff;
+  border-radius: 8px;
+  padding: 1.25rem;
+  border-left: 4px solid var(--info-color);
+}
+
+.doctor-bio {
+  font-style: italic;
+  padding: 1.25rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  position: relative;
+}
+
+.doctor-bio::before {
+  content: '"';
+  font-size: 4rem;
+  color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: -10px;
+  left: 10px;
+}
+
+/* Doctor Form */
+.form-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.form-section-title {
+  color: var(--primary-color);
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}

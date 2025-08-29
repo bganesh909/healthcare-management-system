@@ -1,0 +1,79 @@
+/* Main stylesheet for Healthcare Management System */
+
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+  --success-color: #198754;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #0dcaf0;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --body-bg: #f5f8fa;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  background-color: var(--body-bg);
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+}
+
+/* Common card styling */
+.custom-card {
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Page headers */
+.page-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 1rem;
+}
+
+/* Custom buttons */
+.btn-rounded {
+  border-radius: 50px;
+}
+
+/* Status badges */
+.status-badge {
+  border-radius: 50px;
+  padding: 0.35em 0.8em;
+  font-weight: 500;
+}
+
+/* Footer styling */
+.footer {
+  background-color: var(--dark-color);
+  color: white;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Add animation for transitions */
+.fade-in {
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}

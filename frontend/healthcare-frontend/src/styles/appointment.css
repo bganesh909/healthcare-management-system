@@ -1,0 +1,162 @@
+/* Styling for Appointment Components */
+
+/* Appointment List */
+.appointment-table {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.appointment-table th {
+  background-color: #f0f9ff;
+}
+
+.filter-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  box-shadow: var(--card-shadow);
+}
+
+.status-filter .form-check {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+/* Status badges */
+.status-scheduled {
+  background-color: var(--primary-color);
+}
+
+.status-completed {
+  background-color: var(--success-color);
+}
+
+.status-cancelled {
+  background-color: var(--danger-color);
+}
+
+.status-no-show {
+  background-color: var(--warning-color);
+}
+
+/* Appointment Details */
+.appointment-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.appointment-header {
+  background: linear-gradient(135deg, #8540f5 0%, #6f42c1 100%);
+  color: white;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.appointment-date-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+.appointment-info-section {
+  padding: 1.5rem;
+}
+
+.appointment-info-section h5 {
+  color: var(--primary-color);
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.party-info-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.25rem;
+  height: 100%;
+}
+
+.party-info-card h6 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.appointment-reason {
+  background-color: #f0f9ff;
+  border-left: 4px solid var(--info-color);
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.appointment-notes {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  font-style: italic;
+}
+
+/* Appointment Form */
+.appointment-form-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.appointment-form-title {
+  color: var(--primary-color);
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.time-slot-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.time-slot {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.time-slot:hover {
+  background-color: #f0f9ff;
+}
+
+.time-slot.selected {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.time-slot.unavailable {
+  background-color: #f8f9fa;
+  color: #adb5bd;
+  cursor: not-allowed;
+}
+
+.submit-appointment {
+  margin-top: 2rem;
+  text-align: center;
+}
