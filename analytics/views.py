@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Count, Sum, Case, When, F, IntegerField, Avg
+from django.db.models import Count, Sum, Case, When, F, IntegerField, Avg, Q, DecimalField
 from django.db.models.functions import Trunc, ExtractMonth
 from django.utils import timezone
 from rest_framework import viewsets, status, permissions
@@ -8,10 +8,18 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
 from datetime import datetime, timedelta
+from users.permissions import IsAdminOrStaff, IsClinicalStaff
 from .models import DailyMetrics, DoctorPerformance, PatientActivity
 from appointments.models import Appointment
 from doctors.models import Doctor
 from patients.models import Patient
+from departments.models import Department, Ward, Bed
+from emergency.models import EmergencyVisit, Ambulance
+from billing.models import Invoice, Payment
+from blood_bank.models import BloodUnit, BloodRequest
+from operation_theater.models import OperationTheater, Surgery
+from opd_queue.models import QueueEntry
+from discharge.models import DischargeSummary
 from .serializers import (
     DailyMetricsSerializer, DoctorPerformanceSerializer, PatientActivitySerializer,
     AppointmentsByStatusSerializer, AppointmentsByDoctorSerializer, PatientStatisticsSerializer,
@@ -20,12 +28,12 @@ from .serializers import (
 class AnalyticsPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and (
-            request.user.is_staff or 
-            request.user.is_admin or 
+            request.user.is_staff or
+            request.user.is_admin or
             request.user.is_doctor
         )
 class DashboardView(APIView):
-    permission_classes = [AllowAny]  # Allow public access to the dashboard
+    permission_classes = [IsClinicalStaff]
     def get(self, request, format=None):
         today = timezone.now().date()
         start_of_month = today.replace(day=1)
@@ -96,7 +104,7 @@ class DashboardView(APIView):
             'blood_group_distribution': blood_group_distribution,
         }
 class AppointmentAnalyticsView(APIView):
-    permission_classes = [AllowAny]  # Allow public access to appointment analytics
+    permission_classes = [IsClinicalStaff]
     def get(self, request, format=None):
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
@@ -180,7 +188,7 @@ class AppointmentAnalyticsView(APIView):
             result[day_str] = item['count']
         return result
 class DoctorAnalyticsView(APIView):
-    permission_classes = [AllowAny]  # Allow public access to doctor analytics
+    permission_classes = [IsClinicalStaff]
     def get(self, request, format=None):
         doctor_id = request.query_params.get('doctor_id')
         if doctor_id:
@@ -265,7 +273,7 @@ class DoctorAnalyticsView(APIView):
             }
         return result
 class PatientAnalyticsView(APIView):
-    permission_classes = [AllowAny]  # Allow public access to patient analytics
+    permission_classes = [IsClinicalStaff]
     def get(self, request, format=None):
         patient_id = request.query_params.get('patient_id')
         if patient_id:
@@ -373,7 +381,7 @@ class PatientAnalyticsView(APIView):
             'age_distribution': age_distribution
         })
 class RevenueAnalyticsView(APIView):
-    permission_classes = [IsAdminUser]  # Keep this restricted to admins only
+    permission_classes = [IsAdminOrStaff]
     def get(self, request, format=None):
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
@@ -437,3 +445,245 @@ class RevenueAnalyticsView(APIView):
             revenue_by_specialization[specialization_name] += appointment.doctor.consultation_fee
         return {k: v for k, v in revenue_by_specialization.items() if v > 0}
 
+
+class HospitalOverviewView(APIView):
+    permission_classes = [IsClinicalStaff]
+
+    def get(self, request, format=None):
+        now = timezone.now()
+        today = now.date()
+        start_of_month = today.replace(day=1)
+
+        hospital_stats = self._get_hospital_stats(today)
+        emergency_stats = self._get_emergency_stats()
+        opd_stats = self._get_opd_stats(today)
+        financial_stats = self._get_financial_stats(today, start_of_month)
+        blood_bank_stats = self._get_blood_bank_stats()
+        ot_stats = self._get_ot_stats(today)
+        department_stats = self._get_department_stats()
+        recent_activity = self._get_recent_activity()
+
+        return Response({
+            'hospital_stats': hospital_stats,
+            'emergency_stats': emergency_stats,
+            'opd_stats': opd_stats,
+            'financial_stats': financial_stats,
+            'blood_bank_stats': blood_bank_stats,
+            'ot_stats': ot_stats,
+            'department_stats': department_stats,
+            'recent_activity': recent_activity,
+        })
+
+    def _get_hospital_stats(self, today):
+        total_beds = Bed.objects.count()
+        occupied_beds = Bed.objects.filter(status='OCCUPIED').count()
+        available_beds = Bed.objects.filter(status='AVAILABLE').count()
+        occupancy_rate = round((occupied_beds / total_beds * 100), 1) if total_beds > 0 else 0.0
+        total_patients_admitted = Bed.objects.filter(status='OCCUPIED', patient__isnull=False).count()
+        discharged_today = DischargeSummary.objects.filter(discharge_date=today).count()
+        admitted_today = Bed.objects.filter(
+            status='OCCUPIED',
+            admission_date__date=today,
+        ).count()
+
+        return {
+            'total_beds': total_beds,
+            'occupied_beds': occupied_beds,
+            'available_beds': available_beds,
+            'occupancy_rate': occupancy_rate,
+            'total_patients_admitted': total_patients_admitted,
+            'discharged_today': discharged_today,
+            'admitted_today': admitted_today,
+        }
+
+    def _get_emergency_stats(self):
+        active_statuses = ['WAITING', 'TRIAGED', 'IN_TREATMENT']
+        active_cases = EmergencyVisit.objects.filter(status__in=active_statuses).count()
+        critical_cases = EmergencyVisit.objects.filter(
+            status__in=active_statuses,
+            is_critical=True,
+        ).count()
+        waiting = EmergencyVisit.objects.filter(status='WAITING').count()
+        ambulances_available = Ambulance.objects.filter(
+            status='AVAILABLE', is_active=True,
+        ).count()
+        ambulances_total = Ambulance.objects.filter(is_active=True).count()
+
+        return {
+            'active_cases': active_cases,
+            'critical_cases': critical_cases,
+            'waiting': waiting,
+            'ambulances_available': ambulances_available,
+            'ambulances_total': ambulances_total,
+        }
+
+    def _get_opd_stats(self, today):
+        today_entries = QueueEntry.objects.filter(date=today)
+        todays_appointments = today_entries.count()
+        completed = today_entries.filter(status='COMPLETED').count()
+        in_queue = today_entries.filter(status='WAITING').count()
+
+        avg_wait = today_entries.filter(
+            status='COMPLETED',
+            consultation_start__isnull=False,
+        ).aggregate(
+            avg_wait=Avg(F('consultation_start') - F('check_in_time'))
+        )['avg_wait']
+
+        avg_wait_minutes = 0
+        if avg_wait is not None:
+            avg_wait_minutes = int(avg_wait.total_seconds() / 60)
+
+        return {
+            'todays_appointments': todays_appointments,
+            'completed': completed,
+            'in_queue': in_queue,
+            'avg_wait_time': avg_wait_minutes,
+        }
+
+    def _get_financial_stats(self, today, start_of_month):
+        today_payments = Payment.objects.filter(
+            payment_date__date=today,
+        ).aggregate(total=Sum('amount'))['total'] or 0.0
+
+        month_payments = Payment.objects.filter(
+            payment_date__date__gte=start_of_month,
+            payment_date__date__lte=today,
+        ).aggregate(total=Sum('amount'))['total'] or 0.0
+
+        pending_invoices_qs = Invoice.objects.filter(
+            status__in=['PENDING', 'PARTIALLY_PAID', 'OVERDUE'],
+        )
+        pending_invoices = pending_invoices_qs.count()
+        pending_amount = pending_invoices_qs.aggregate(
+            total=Sum(F('total_amount') - F('paid_amount'), output_field=DecimalField()),
+        )['total'] or 0.0
+
+        return {
+            'revenue_today': float(today_payments),
+            'revenue_this_month': float(month_payments),
+            'pending_invoices': pending_invoices,
+            'pending_amount': float(pending_amount),
+        }
+
+    def _get_blood_bank_stats(self):
+        available_units = BloodUnit.objects.filter(status='AVAILABLE')
+        total_units = available_units.count()
+
+        units_by_group_qs = available_units.values('blood_group').annotate(
+            count=Count('id'),
+        ).order_by('blood_group')
+        units_by_group = {item['blood_group']: item['count'] for item in units_by_group_qs}
+
+        today = timezone.now().date()
+        expiring_threshold = today + timedelta(days=7)
+        expiring_soon = available_units.filter(
+            expiry_date__lte=expiring_threshold,
+            expiry_date__gte=today,
+        ).count()
+
+        pending_requests = BloodRequest.objects.filter(status='PENDING').count()
+
+        return {
+            'total_units': total_units,
+            'units_by_group': units_by_group,
+            'expiring_soon': expiring_soon,
+            'pending_requests': pending_requests,
+        }
+
+    def _get_ot_stats(self, today):
+        today_start = timezone.make_aware(datetime.combine(today, datetime.min.time()))
+        today_end = timezone.make_aware(datetime.combine(today, datetime.max.time()))
+
+        surgeries_today = Surgery.objects.filter(
+            scheduled_date__range=(today_start, today_end),
+        ).count()
+        surgeries_completed = Surgery.objects.filter(
+            scheduled_date__range=(today_start, today_end),
+            status='COMPLETED',
+        ).count()
+        surgeries_scheduled = Surgery.objects.filter(
+            scheduled_date__range=(today_start, today_end),
+            status='SCHEDULED',
+        ).count()
+
+        active_theaters = OperationTheater.objects.filter(is_active=True)
+        theaters_total = active_theaters.count()
+        theaters_available = active_theaters.filter(status='AVAILABLE').count()
+
+        return {
+            'surgeries_today': surgeries_today,
+            'surgeries_completed': surgeries_completed,
+            'surgeries_scheduled': surgeries_scheduled,
+            'theaters_available': theaters_available,
+            'theaters_total': theaters_total,
+        }
+
+    def _get_department_stats(self):
+        departments = Department.objects.filter(is_active=True)
+        result = []
+
+        for dept in departments:
+            dept_beds = Bed.objects.filter(ward__department=dept)
+            beds_total = dept_beds.count()
+            beds_occupied = dept_beds.filter(status='OCCUPIED').count()
+            doctors_count = Doctor.objects.filter(
+                department=dept,
+            ).count() if hasattr(Doctor, 'department') else 0
+            patients_count = dept_beds.filter(
+                status='OCCUPIED', patient__isnull=False,
+            ).count()
+
+            result.append({
+                'name': dept.name,
+                'patients': patients_count,
+                'doctors': doctors_count,
+                'beds_occupied': beds_occupied,
+                'beds_total': beds_total,
+            })
+
+        return result
+
+    def _get_recent_activity(self):
+        activities = []
+        now = timezone.now()
+
+        # Recent emergency visits
+        recent_emergencies = EmergencyVisit.objects.order_by('-arrival_time')[:5]
+        for visit in recent_emergencies:
+            activities.append({
+                'type': 'emergency',
+                'message': f'Emergency visit {visit.visit_number}: {visit.get_status_display()}',
+                'time': visit.arrival_time.isoformat(),
+            })
+
+        # Recent discharges
+        recent_discharges = DischargeSummary.objects.order_by('-created_at')[:5]
+        for discharge in recent_discharges:
+            activities.append({
+                'type': 'discharge',
+                'message': f'Patient {discharge.patient} discharged ({discharge.get_discharge_type_display()})',
+                'time': discharge.created_at.isoformat(),
+            })
+
+        # Recent surgeries
+        recent_surgeries = Surgery.objects.order_by('-updated_at')[:5]
+        for surgery in recent_surgeries:
+            activities.append({
+                'type': 'surgery',
+                'message': f'Surgery {surgery.surgery_number}: {surgery.get_status_display()}',
+                'time': surgery.updated_at.isoformat(),
+            })
+
+        # Recent payments
+        recent_payments = Payment.objects.order_by('-payment_date')[:5]
+        for payment in recent_payments:
+            activities.append({
+                'type': 'payment',
+                'message': f'Payment of {payment.amount} received for {payment.invoice.invoice_number}',
+                'time': payment.payment_date.isoformat(),
+            })
+
+        # Sort all activities by time descending and return the most recent 20
+        activities.sort(key=lambda x: x['time'], reverse=True)
+        return activities[:20]

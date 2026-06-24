@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Patient
+from .models import Patient, PatientDocument
+
+
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'phone_number', 'date_of_birth')
@@ -17,3 +19,10 @@ class PatientAdmin(admin.ModelAdmin):
         }),
     )
 
+
+@admin.register(PatientDocument)
+class PatientDocumentAdmin(admin.ModelAdmin):
+    list_display = ('title', 'patient', 'document_type', 'uploaded_at')
+    search_fields = ('title', 'patient__first_name', 'patient__last_name')
+    list_filter = ('document_type', 'uploaded_at')
+    readonly_fields = ('uploaded_at',)

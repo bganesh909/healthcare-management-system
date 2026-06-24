@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Doctor
+from .models import Doctor, DoctorReview
+
+
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'specialization', 'experience_years', 'email')
@@ -17,3 +19,10 @@ class DoctorAdmin(admin.ModelAdmin):
         }),
     )
 
+
+@admin.register(DoctorReview)
+class DoctorReviewAdmin(admin.ModelAdmin):
+    list_display = ('doctor', 'patient', 'rating', 'is_anonymous', 'created_at')
+    search_fields = ('doctor__first_name', 'doctor__last_name', 'patient__first_name', 'patient__last_name')
+    list_filter = ('rating', 'is_anonymous', 'created_at')
+    readonly_fields = ('created_at', 'updated_at')

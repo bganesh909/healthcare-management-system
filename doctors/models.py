@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+
 class Doctor(models.Model):
     SPECIALIZATION_CHOICES = (
         ('CARDIOLOGY', 'Cardiology'),
@@ -33,4 +36,27 @@ class Doctor(models.Model):
         return f"Dr. {self.first_name} {self.last_name} ({self.get_specialization_display()})"
     class Meta:
         ordering = ['last_name', 'first_name']
+
+
+class DoctorReview(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='reviews')
+    patient = models.ForeignKey('patients.Patient', on_delete=models.CASCADE, related_name='doctor_reviews')
+    appointment = models.ForeignKey(
+        'appointments.Appointment', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='review'
+    )
+    rating = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    comment = models.TextField(blank=True, null=True)
+    is_anonymous = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Review by {self.patient} for Dr. {self.doctor.last_name} - {self.rating}/5"
+
+    class Meta:
+        unique_together = ['doctor', 'patient', 'appointment']
+        ordering = ['-created_at']
 

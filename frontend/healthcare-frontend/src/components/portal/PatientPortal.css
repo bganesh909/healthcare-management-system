@@ -1,0 +1,1012 @@
+/* Patient Portal - BG Hospitals */
+
+/* ===== Variables ===== */
+:root {
+  --portal-primary: #1a4b8c;
+  --portal-primary-light: #2563a8;
+  --portal-primary-dark: #0f3566;
+  --portal-success: #10b981;
+  --portal-danger: #dc2626;
+  --portal-warning: #f59e0b;
+  --portal-info: #3b82f6;
+  --portal-grey: #6b7280;
+  --portal-light-bg: #f0f4f8;
+  --portal-card-shadow: 0 2px 12px rgba(26, 75, 140, 0.08);
+  --portal-card-hover-shadow: 0 4px 20px rgba(26, 75, 140, 0.14);
+}
+
+/* ===== Login Screen ===== */
+.portal-login-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e8eef5 0%, #f0f4f8 50%, #e3ecf7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.portal-login-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(26, 75, 140, 0.12);
+  max-width: 460px;
+  width: 100%;
+  padding: 48px 40px;
+  text-align: center;
+}
+
+.portal-login-card .portal-logo {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--portal-primary), var(--portal-primary-light));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: #fff;
+  font-size: 32px;
+}
+
+.portal-login-card h2 {
+  color: var(--portal-primary);
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-size: 1.5rem;
+}
+
+.portal-login-card .subtitle {
+  color: var(--portal-grey);
+  margin-bottom: 32px;
+  font-size: 0.95rem;
+}
+
+.portal-login-card .phone-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.portal-login-card .phone-input-group .country-code {
+  width: 80px;
+  text-align: center;
+  font-weight: 600;
+  background: var(--portal-light-bg);
+  border: 2px solid #d1d9e6;
+  border-radius: 10px;
+  color: var(--portal-primary);
+}
+
+.portal-login-card .phone-input-group .phone-field {
+  flex: 1;
+  border: 2px solid #d1d9e6;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 1.05rem;
+  transition: border-color 0.2s;
+}
+
+.portal-login-card .phone-input-group .phone-field:focus {
+  border-color: var(--portal-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+}
+
+.portal-login-card .btn-portal-primary {
+  background: linear-gradient(135deg, var(--portal-primary), var(--portal-primary-light));
+  border: none;
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 100%;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+
+.portal-login-card .btn-portal-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(26, 75, 140, 0.3);
+}
+
+.portal-login-card .btn-portal-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.portal-login-card .divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  color: var(--portal-grey);
+  font-size: 0.85rem;
+}
+
+.portal-login-card .divider::before,
+.portal-login-card .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #d1d9e6;
+}
+
+.portal-login-card .appt-id-input {
+  border: 2px solid #d1d9e6;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+
+.portal-login-card .appt-id-input:focus {
+  border-color: var(--portal-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+}
+
+.portal-login-card .btn-portal-secondary {
+  background: transparent;
+  border: 2px solid var(--portal-primary);
+  color: var(--portal-primary);
+  padding: 10px 32px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  width: 100%;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.portal-login-card .btn-portal-secondary:hover {
+  background: var(--portal-primary);
+  color: #fff;
+}
+
+.portal-error-msg {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--portal-danger);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+/* ===== Main Portal Layout ===== */
+.portal-main-wrapper {
+  min-height: 100vh;
+  background: var(--portal-light-bg);
+}
+
+/* Header */
+.portal-header {
+  background: linear-gradient(135deg, var(--portal-primary), var(--portal-primary-light));
+  color: #fff;
+  padding: 20px 0;
+  box-shadow: 0 2px 12px rgba(26, 75, 140, 0.2);
+}
+
+.portal-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.portal-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.portal-avatar {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.portal-patient-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.portal-patient-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+.portal-blood-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.portal-quick-stats {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.portal-stat-item {
+  text-align: center;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.portal-stat-item .stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: block;
+}
+
+.portal-stat-item .stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+}
+
+.portal-header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.portal-header-actions .btn {
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+}
+
+/* Notification Badge */
+.portal-notification-badge {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===== Tabs ===== */
+.portal-tabs-container {
+  padding: 24px 0;
+}
+
+.portal-tabs {
+  display: flex;
+  gap: 6px;
+  background: #fff;
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: var(--portal-card-shadow);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.portal-tab-btn {
+  flex: 0 0 auto;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: var(--portal-grey);
+  font-weight: 600;
+  font-size: 0.88rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.portal-tab-btn:hover {
+  background: var(--portal-light-bg);
+  color: var(--portal-primary);
+}
+
+.portal-tab-btn.active {
+  background: var(--portal-primary);
+  color: #fff;
+}
+
+.portal-tab-btn i {
+  font-size: 0.85rem;
+}
+
+/* ===== Cards ===== */
+.portal-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--portal-card-shadow);
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: box-shadow 0.2s;
+  border: 1px solid #e8eef5;
+}
+
+.portal-card:hover {
+  box-shadow: var(--portal-card-hover-shadow);
+}
+
+.portal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.portal-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--portal-primary-dark);
+  margin: 0;
+}
+
+.portal-card-subtitle {
+  font-size: 0.85rem;
+  color: var(--portal-grey);
+  margin: 2px 0 0;
+}
+
+/* ===== Status Badges ===== */
+.portal-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.portal-badge-scheduled {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.portal-badge-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.portal-badge-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.portal-badge-no-show,
+.portal-badge-noshow {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.portal-badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.portal-badge-in-progress,
+.portal-badge-checked-in {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.portal-badge-active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.portal-badge-missed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.portal-badge-sample-collected {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* ===== Timeline ===== */
+.portal-section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--portal-primary);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e8eef5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.portal-section-title i {
+  font-size: 0.9rem;
+}
+
+.portal-appointment-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.portal-appt-date-block {
+  flex: 0 0 64px;
+  background: var(--portal-light-bg);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+}
+
+.portal-appt-date-block .day {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--portal-primary);
+  line-height: 1;
+}
+
+.portal-appt-date-block .month {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--portal-grey);
+  font-weight: 600;
+}
+
+.portal-appt-details {
+  flex: 1;
+}
+
+.portal-appt-details .doctor-name {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.portal-appt-details .department {
+  font-size: 0.85rem;
+  color: var(--portal-grey);
+}
+
+.portal-appt-details .time-slot {
+  font-size: 0.85rem;
+  color: var(--portal-primary);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.portal-appt-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.portal-token {
+  background: var(--portal-light-bg);
+  color: var(--portal-primary);
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ===== Prescription Cards ===== */
+.portal-medicine-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+
+.portal-medicine-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--portal-light-bg);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.portal-medicine-item.active-medicine {
+  background: #d1fae5;
+  border-left: 3px solid var(--portal-success);
+}
+
+.portal-medicine-item .medicine-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.portal-medicine-item .medicine-dosage {
+  color: var(--portal-grey);
+  font-size: 0.82rem;
+}
+
+/* ===== Lab Reports ===== */
+.portal-lab-results-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+}
+
+.portal-lab-results-table th {
+  background: var(--portal-light-bg);
+  color: var(--portal-primary-dark);
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid #d1d9e6;
+}
+
+.portal-lab-results-table th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.portal-lab-results-table th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.portal-lab-results-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e8eef5;
+}
+
+.portal-lab-results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.portal-abnormal {
+  color: var(--portal-danger);
+  font-weight: 700;
+  background: #fef2f2;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ===== Vitals Display ===== */
+.portal-vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.portal-vital-item {
+  background: var(--portal-light-bg);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.portal-vital-item .vital-icon {
+  font-size: 1.3rem;
+  color: var(--portal-primary);
+  margin-bottom: 8px;
+}
+
+.portal-vital-item .vital-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.portal-vital-item .vital-label {
+  font-size: 0.72rem;
+  color: var(--portal-grey);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+.portal-vitals-history-table {
+  width: 100%;
+  font-size: 0.82rem;
+  border-collapse: collapse;
+}
+
+.portal-vitals-history-table th {
+  background: var(--portal-light-bg);
+  padding: 8px 10px;
+  font-weight: 600;
+  color: var(--portal-primary-dark);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.portal-vitals-history-table td {
+  padding: 8px 10px;
+  text-align: center;
+  border-bottom: 1px solid #e8eef5;
+}
+
+/* ===== Allergy & Treatment Cards ===== */
+.portal-allergy-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #fef2f2;
+  color: var(--portal-danger);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 6px 6px 0;
+  border: 1px solid #fecaca;
+}
+
+.portal-treatment-card {
+  border-left: 3px solid var(--portal-primary);
+  padding-left: 16px;
+}
+
+/* ===== Discharge & Follow-ups ===== */
+.portal-discharge-card {
+  border-top: 3px solid var(--portal-primary);
+}
+
+.portal-discharge-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.portal-discharge-meta-item {
+  background: var(--portal-light-bg);
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.portal-discharge-meta-item .meta-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--portal-grey);
+  letter-spacing: 0.3px;
+}
+
+.portal-discharge-meta-item .meta-value {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.92rem;
+}
+
+.portal-followup-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  background: var(--portal-light-bg);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.portal-followup-card .followup-date {
+  font-weight: 700;
+  color: var(--portal-primary);
+  flex: 0 0 auto;
+}
+
+.portal-followup-card .followup-details {
+  flex: 1;
+}
+
+.portal-next-checkup {
+  background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+  border: 2px solid var(--portal-info);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.portal-next-checkup .checkup-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--portal-grey);
+  letter-spacing: 0.5px;
+}
+
+.portal-next-checkup .checkup-date {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--portal-primary);
+  margin-top: 4px;
+}
+
+/* ===== Profile Tab ===== */
+.portal-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.portal-profile-item {
+  padding: 14px;
+  background: var(--portal-light-bg);
+  border-radius: 10px;
+}
+
+.portal-profile-item .profile-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--portal-grey);
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+
+.portal-profile-item .profile-value {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+/* ===== Filter Bar ===== */
+.portal-filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.portal-filter-btn {
+  padding: 6px 16px;
+  border: 1px solid #d1d9e6;
+  background: #fff;
+  color: var(--portal-grey);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.portal-filter-btn:hover {
+  border-color: var(--portal-primary);
+  color: var(--portal-primary);
+}
+
+.portal-filter-btn.active {
+  background: var(--portal-primary);
+  color: #fff;
+  border-color: var(--portal-primary);
+}
+
+/* ===== Download Buttons ===== */
+.portal-btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--portal-light-bg);
+  color: var(--portal-primary);
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.portal-btn-download:hover {
+  background: var(--portal-primary);
+  color: #fff;
+  border-color: var(--portal-primary);
+}
+
+.portal-btn-followup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--portal-success);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.portal-btn-followup:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+/* ===== Loading & Empty States ===== */
+.portal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--portal-grey);
+  font-size: 1rem;
+}
+
+.portal-loading .spinner-border {
+  color: var(--portal-primary);
+  margin-right: 12px;
+}
+
+.portal-empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--portal-grey);
+}
+
+.portal-empty-state i {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+.portal-empty-state p {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ===== Logout Button ===== */
+.portal-logout-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.portal-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .portal-login-card {
+    padding: 32px 24px;
+  }
+
+  .portal-header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .portal-quick-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .portal-stat-item {
+    padding: 6px 10px;
+    flex: 1;
+  }
+
+  .portal-stat-item .stat-value {
+    font-size: 1.1rem;
+  }
+
+  .portal-tabs {
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .portal-tab-btn {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+
+  .portal-tab-btn .tab-text {
+    display: none;
+  }
+
+  .portal-tab-btn i {
+    font-size: 1rem;
+  }
+
+  .portal-appointment-card {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .portal-appt-actions {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+
+  .portal-vitals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .portal-discharge-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-vitals-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .portal-vital-item {
+    padding: 12px 8px;
+  }
+
+  .portal-vital-item .vital-value {
+    font-size: 1.1rem;
+  }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  .portal-header,
+  .portal-tabs,
+  .portal-header-actions,
+  .portal-btn-download,
+  .portal-btn-followup,
+  .portal-logout-btn,
+  .portal-notification-badge,
+  .portal-filter-bar {
+    display: none !important;
+  }
+
+  .portal-main-wrapper {
+    background: #fff;
+    min-height: auto;
+  }
+
+  .portal-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+
+  .portal-tabs-container {
+    padding: 0;
+  }
+
+  body {
+    font-size: 12pt;
+  }
+}

@@ -204,7 +204,7 @@ const DoctorForm = () => {
           ></textarea>
         </div>
         <div className="mb-3">
-          <label htmlFor="consultation_fee" className="form-label">Consultation Fee (USD) *</label>
+          <label htmlFor="consultation_fee" className="form-label">Consultation Fee (INR) *</label>
           <input
             type="number"
             step="0.01"

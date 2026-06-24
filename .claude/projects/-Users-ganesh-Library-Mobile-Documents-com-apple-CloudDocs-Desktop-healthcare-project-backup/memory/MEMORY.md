@@ -1,0 +1,1 @@
+- [Project Overview](project_overview.md) — Healthcare management system: Django REST + React, SQLite, JWT auth

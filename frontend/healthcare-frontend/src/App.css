@@ -1,38 +1,42 @@
+/* App-level styles */
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  text-align: left;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  position: relative;
 }
 
-.App-link {
-  color: #61dafb;
+/* Rainbow gradient accent bar under navbar */
+.App > main {
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, #4361ee, #06b6d4, #10b981, #f59e0b, #ef4444) 1;
+  animation: pageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Smooth link transitions */
+a {
+  transition: color 0.2s, opacity 0.2s;
+}
+
+/* Space for fixed footer on desktop */
+.App > main {
+  padding-bottom: 50px;
+}
+
+/* On mobile, footer is static so no extra padding needed */
+@media (max-width: 768px) {
+  .App > main {
+    padding-bottom: 0;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+/* Container max-width for ultra-wide */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
   }
 }
